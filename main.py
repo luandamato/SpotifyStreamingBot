@@ -1,4 +1,5 @@
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
@@ -178,11 +179,11 @@ class Main:
             driver.get('https://accounts.spotify.com/en/login/')
             login_username_present = EC.presence_of_element_located((By.ID, 'login-username'))
             WebDriverWait(driver, self.website_load_max_wait).until(login_username_present)
-
+            sleep(1)
             username_elem = driver.find_element_by_id('login-username').send_keys(username)
             password_elem = driver.find_element_by_id('login-password').send_keys(password)
             login_button_elem = driver.find_element_by_id('login-button').click()
-
+            sleep(1)
             try:
                 url_to_be_present = EC.url_to_be('https://accounts.spotify.com/en/status')
                 WebDriverWait(driver, self.login_check_max_wait).until(url_to_be_present)
@@ -211,26 +212,22 @@ class Main:
 
             #Removes navigator.webdriver flag
             options.add_experimental_option('excludeSwitches', ['enable-logging','enable-automation'])
-            
-            # For older ChromeDriver under version 79.0.3945.16
-            options.add_experimental_option('useAutomationExtension', False)
+
 
             options.add_argument("window-size=1280,800")
 
-            #For ChromeDriver version 79.0.3945.16 or over
-            options.add_argument('--disable-blink-features=AutomationControlled')
-            driver = webdriver.Chrome(options=options)
+            driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
             if self.Login(username,password,driver) == True:
                 driver.get(self.url)
-                element_present = EC.presence_of_element_located((By.XPATH, '/html/body/div[4]/div/div[2]/div[4]/main/div/div[2]/div/div/div[2]/section/div/div[4]/div[1]/div/div/div/div[2]/div[1]/div/div/div[1]'))
+                element_present = EC.presence_of_element_located((By.XPATH, '/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/div[2]/div[3]/div/div[2]/div[2]/div[1]/div/div[1]'))
                 WebDriverWait(driver, self.max_wait).until(element_present)
                 index = 0
                 for i in range(self.number_of_songs):
                     index += 1
                     playtime = randint(self.minplay,self.maxplay)
-                    WebDriverWait(driver,self.max_wait).until(EC.element_to_be_clickable((By.XPATH,f'/html/body/div[4]/div/div[2]/div[4]/main/div/div[2]/div/div/div[2]/section/div/div[4]/div[1]/div/div/div/div[2]/div[{index}]/div/div/div[1]'))).click()
-                    WebDriverWait(driver,self.max_wait).until(EC.text_to_be_present_in_element((By.XPATH,'/html/body/div[4]/div/div[2]/div[3]/footer/div[1]/div[2]/div/div[2]/div[1]'),'0:01'))
+                    WebDriverWait(driver,self.max_wait).until(EC.element_to_be_clickable((By.XPATH,f'/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/div[2]/div[3]/div/div[2]/div[2]/div[{index}]/div/div[1]'))).click()
+                    WebDriverWait(driver,self.max_wait).until(EC.text_to_be_present_in_element((By.XPATH,'/html/body/div[4]/div/div[2]/div[2]/footer/div/div[2]/div/div[2]/div[1]'),'0:01'))
                     sleep(playtime)
                     self.PrintText(Fore.CYAN,Fore.RED,'ARTIST STREAM',f'SONG {index} | STREAMED FOR {playtime}s | WITH {username}:{password}')
         except:
@@ -253,26 +250,24 @@ class Main:
 
             #Removes navigator.webdriver flag
             options.add_experimental_option('excludeSwitches', ['enable-logging','enable-automation'])
-            
-            # For older ChromeDriver under version 79.0.3945.16
-            options.add_experimental_option('useAutomationExtension', False)
+
 
             options.add_argument("window-size=1280,800")
 
-            #For ChromeDriver version 79.0.3945.16 or over
-            options.add_argument('--disable-blink-features=AutomationControlled')
-            driver = webdriver.Chrome(options=options)
+            driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
             if self.Login(username,password,driver) == True:
                 driver.get(self.url)
-                element_present = EC.presence_of_element_located((By.XPATH, '/html/body/div[4]/div/div[2]/div[4]/main/div/div[2]/div/div/div[2]/section/div[4]/div/div[2]/div[2]/div[1]/div/div/div[1]'))
+                element_present = EC.presence_of_element_located((By.XPATH, '/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/div[2]/div[3]/div/div[2]/div[2]/div[1]/div/div[1]'))
                 WebDriverWait(driver, self.max_wait).until(element_present)
                 index = 0
                 for i in range(self.number_of_songs):
                     index += 1
                     playtime = randint(self.minplay,self.maxplay)
-                    WebDriverWait(driver,self.max_wait).until(EC.element_to_be_clickable((By.XPATH,f'/html/body/div[4]/div/div[2]/div[4]/main/div/div[2]/div/div/div[2]/section/div[4]/div/div[2]/div[2]/div[{index}]/div/div/div[1]'))).click()
-                    WebDriverWait(driver,self.max_wait).until(EC.text_to_be_present_in_element((By.XPATH,'/html/body/div[4]/div/div[2]/div[3]/footer/div/div[2]/div/div[2]/div[1]'),'0:01'))
+                    # WebDriverWait(driver,self.max_wait).until(EC.element_to_be_clickable((By.XPATH,f'/html/body/div[4]/div/div[2]/div[4]/main/div/div[2]/div/div/div[2]/section/div[4]/div/div[2]/div[2]/div[{index}]/div/div/div[1]'))).click()
+                    # WebDriverWait(driver,self.max_wait).until(EC.text_to_be_present_in_element((By.XPATH,'/html/body/div[4]/div/div[2]/div[3]/footer/div/div[2]/div/div[2]/div[1]'),'0:01'))
+                    WebDriverWait(driver,self.max_wait).until(EC.element_to_be_clickable((By.XPATH,f'/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/div[2]/div[3]/div/div[2]/div[2]/div[{index}]/div/div[1]'))).click()
+                    WebDriverWait(driver,self.max_wait).until(EC.text_to_be_present_in_element((By.XPATH,'/html/body/div[4]/div/div[2]/div[2]/footer/div/div[2]/div/div[2]/div[1]'),'0:01'))
                     sleep(playtime)
                     self.PrintText(Fore.CYAN,Fore.RED,'PLAYLIST OR ALBUM STREAM',f'SONG {index} | STREAMED FOR {playtime}s | WITH {username}:{password}')
         except:
