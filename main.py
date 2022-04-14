@@ -204,7 +204,7 @@ class Main:
 
             options.add_argument(f'--user-agent={self.GetRandomUserAgent()}')
             options.add_argument('--no-sandbox')
-            options.add_argument('--log-level=3')
+            #options.add_argument('--log-level=3')
             options.add_argument('--lang=en')
 
             if self.use_proxy == 1:
@@ -220,13 +220,14 @@ class Main:
 
             if self.Login(username,password,driver) == True:
                 driver.get(self.url)
-                element_present = EC.presence_of_element_located((By.XPATH, '/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/div[2]/div[3]/div/div[2]/div[2]/div[1]/div/div[1]'))
+                element_present = EC.presence_of_element_located((By.XPATH, '/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/div[4]/div[1]/div[2]/div[2]/div[1]/div/div[1]'))
                 WebDriverWait(driver, self.max_wait).until(element_present)
                 index = 0
                 for i in range(self.number_of_songs):
                     index += 1
                     playtime = randint(self.minplay,self.maxplay)
-                    WebDriverWait(driver,self.max_wait).until(EC.element_to_be_clickable((By.XPATH,f'/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/div[2]/div[3]/div/div[2]/div[2]/div[{index}]/div/div[1]'))).click()
+                    #/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/div[4]/div[1]/div[2]/div[2]/div[{index}]/div/div[1]/div/button
+                    WebDriverWait(driver,self.max_wait).until(EC.element_to_be_clickable((By.XPATH,f'/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/div[4]/div[1]/div[2]/div[2]/div[{index}]/div/div[1]'))).click()
                     WebDriverWait(driver,self.max_wait).until(EC.text_to_be_present_in_element((By.XPATH,'/html/body/div[4]/div/div[2]/div[2]/footer/div/div[2]/div/div[2]/div[1]'),'0:01'))
                     sleep(playtime)
                     self.PrintText(Fore.CYAN,Fore.RED,'ARTIST STREAM',f'SONG {index} | STREAMED FOR {playtime}s | WITH {username}:{password}')
@@ -285,13 +286,14 @@ class Main:
     def Start(self):
             if self.method == 1:
                 combos = self.ReadFile('combos.txt','r')
-                with ThreadPoolExecutor(max_workers=self.browser_amount) as ex:
-                    for combo in combos:
-                        username = combo.split(':')[0]
-                        password = combo.split(':')[-1]
-                        ex.submit(self.StartStream,username,password)
-                        if self.wait_before_start > 0:
-                            sleep(self.wait_before_start)
+                while True:
+                    with ThreadPoolExecutor(max_workers=self.browser_amount) as ex:
+                        for combo in combos:
+                            username = combo.split(':')[0]
+                            password = combo.split(':')[-1]
+                            ex.submit(self.StartStream,username,password)
+                            if self.wait_before_start > 0:
+                                sleep(self.wait_before_start)
             else:
                 while True:
                     if active_count()<= self.browser_amount:
